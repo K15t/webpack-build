@@ -1,6 +1,6 @@
 {
   "name": "k15t-webpack-build",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Base webpack build script including validation and test support",
   "main": "index.js",
   "repository": {
@@ -8,7 +8,8 @@
     "url": "https://github.com/K15t/webpack-build.git"
   },
   "files": [
-    "build/"
+    "*.json",
+    "*.js"
   ],
   "keywords": [
     "webpack",
@@ -36,19 +37,9 @@
     "imports-loader": "0.6.x",
     "jasmine-core": "2.4.x",
     "json-loader": "0.5.x",
-    "karma": "0.13.x",
-    "karma-chrome-launcher": "0.2.x",
-    "karma-coverage": "0.5.x",
-    "karma-jasmine": "0.3.x",
-    "karma-phantomjs-launcher": "0.2.x",
-    "karma-sourcemap-loader": "0.3.x",
-    "karma-webpack": "1.7.x",
-    "ng2-translate": "1.7.x",
     "node.extend": "1.1.x",
     "phantomjs": "1.9.x",
     "phantomjs-polyfill": "0.0.x",
-    "properties-reader": "0.0.x",
-    "protractor": "3.0.x",
     "raw-loader": "0.5.x",
     "reflect-metadata": "0.1.x",
     "rimraf": "2.4.x",
