@@ -1,0 +1,68 @@
+{
+  "name": "k15t-webpack-build",
+  "version": "0.0.1",
+  "description": "Base webpack build script including validation and test support",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/K15t/webpack-build.git"
+  },
+  "files": [
+    "build/"
+  ],
+  "keywords": [
+    "webpack",
+    "atlassian",
+    "angular",
+    "frontend",
+    "typescript",
+    "jasmine"
+  ],
+  "author": "Sven Walter <sven@k15t.com> (http://www.k15t.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/K15t/webpack-build/issues"
+  },
+  "homepage": "https://github.com/K15t/webpack-build",
+  "dependencies": {
+    "copy-webpack-plugin": "0.3.x",
+    "css-loader": "0.23.x",
+    "exports-loader": "0.6.x",
+    "expose-loader": "0.7.x",
+    "file-loader": "0.8.x",
+    "fs": "0.0.x",
+    "html-webpack-plugin": "1.7.x",
+    "http-server": "0.8.x",
+    "imports-loader": "0.6.x",
+    "jasmine-core": "2.4.x",
+    "json-loader": "0.5.x",
+    "karma": "0.13.x",
+    "karma-chrome-launcher": "0.2.x",
+    "karma-coverage": "0.5.x",
+    "karma-jasmine": "0.3.x",
+    "karma-phantomjs-launcher": "0.2.x",
+    "karma-sourcemap-loader": "0.3.x",
+    "karma-webpack": "1.7.x",
+    "ng2-translate": "1.7.x",
+    "node.extend": "1.1.x",
+    "phantomjs": "1.9.x",
+    "phantomjs-polyfill": "0.0.x",
+    "properties-reader": "0.0.x",
+    "protractor": "3.0.x",
+    "raw-loader": "0.5.x",
+    "reflect-metadata": "0.1.x",
+    "rimraf": "2.4.x",
+    "style-loader": "0.13.x",
+    "ts-helper": "0.0.x",
+    "ts-loader": "0.8.x",
+    "tsconfig-lint": "0.4.x",
+    "tslint": "3.3.x",
+    "tslint-loader": "2.1.x",
+    "typedoc": "0.3.x",
+    "typescript": "1.7.x",
+    "typings": "0.6.x",
+    "url-loader": "0.5.x",
+    "webpack": "1.12.x",
+    "webpack-dev-server": "1.14.x"
+  }
+}
