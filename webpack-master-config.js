@@ -17,9 +17,6 @@ var fs = require('fs');
 const ENV_DEVELOPMENT = 'development';
 const ENV_PROD = 'production';
 
-const CI_PARAM_DEV_MODE = '--devModeEnabled';
-const CI_PARAM_DEBUG = '--debug';
-
 /**
  * Module defining the common build configuration for webpack-based projects.
  *
@@ -27,10 +24,9 @@ const CI_PARAM_DEBUG = '--debug';
  */
 module.exports = function(opts) {
 
-    let devModeEnabled = process.argv.indexOf(CI_PARAM_DEV_MODE) !== -1;
-    let debugModeEnabled = process.argv.indexOf(CI_PARAM_DEBUG) !== -1;
-    let outputPath = utils.getAbsolutePath('./../../../target/' + (opts.metadata.staticContentResourcesPrefix ? opts.metadata.staticContentResourcesPrefix : ''));
-    let workingDir = utils.getAbsolutePath('./../../../');
+    let testingEnabled = !!process.env.testMode;
+    let devModeEnabled = !!process.env.devMode;
+    let debugModeEnabled = !!process.env.debug;
 
     console.log('------------------------------------------------------------------------------------');
     if (devModeEnabled) {
@@ -39,9 +35,6 @@ module.exports = function(opts) {
         console.log('  Executing production build');
     }
     console.log('------------------------------------------------------------------------------------');
-
-    console.log('Working dir: ' + workingDir);
-    console.log('Output dir: ' + outputPath);
 
     let config = {
 
@@ -54,7 +47,6 @@ module.exports = function(opts) {
         entry: {},
 
         output: {
-            path: outputPath,
             filename: '[name].[chunkhash].bundle.js',
             sourceMapFilename: '[name].[chunkhash].bundle.map',
             chunkFilename: '[id].[chunkhash].chunk.js'
@@ -100,7 +92,7 @@ module.exports = function(opts) {
             ]
         },
 
-        plugins: getPlugins(devModeEnabled, opts),
+        plugins: getPlugins(devModeEnabled, testingEnabled, opts),
 
         // Other module loader config
         tslint: {
@@ -114,7 +106,7 @@ module.exports = function(opts) {
             port: opts.metadata.devServer.port,
             host: opts.metadata.devServer.host,
             historyApiFallback: false,
-            contentBase: outputPath,
+            contentBase: opts.output.path,
             watchOptions: {
                 aggregateTimeout: 300,
                 poll: 1000
@@ -144,9 +136,10 @@ module.exports = function(opts) {
  * Gets the list of plugins for the specific build run e.g. production.
  *
  * @param devModeEnabled Boolean if the development mode is enabled for the build
+ * @param testingEnabled Boolean if tests are going to be executed
  * @param opts General configuration options
  */
-function getPlugins(devModeEnabled, opts) {
+function getPlugins(devModeEnabled, testingEnabled, opts) {
 
     let plugins = [];
     let envMode = devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD;
@@ -160,8 +153,10 @@ function getPlugins(devModeEnabled, opts) {
             'ADD_ON_KEY': JSON.stringify(opts.metadata.addOnKey)
         }
     }));
+
     plugins.push(new OccurenceOrderPlugin(true));
-    if ('test' !== process.env.ENV) {
+
+    if (testingEnabled) {
         plugins.push(new CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.[chunkhash].bundle.js',
