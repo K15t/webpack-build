@@ -10,6 +10,7 @@ var UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var FailPlugin = require('webpack-fail-plugin');
 var extend = require('node.extend');
 var utils = require('./utils');
 var fs = require('fs');
@@ -145,6 +146,11 @@ function getPlugins(devModeEnabled, testingEnabled, opts) {
     let envMode = devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD;
 
     // ---------------------------------------------------------- COMMON
+
+    // ... the plugin is required to enforce to return a correct exit code which
+    //     will be required e.g. building with maven and in case of errors the build should not
+    //     ne successful.
+    plugins.push(FailPlugin);
 
     plugins.push(new webpack.DefinePlugin({
         'process.env': {

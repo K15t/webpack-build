@@ -1,6 +1,6 @@
 {
   "name": "k15t-webpack-build",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Base webpack build script including validation and test support",
   "main": "index.js",
   "repository": {
@@ -54,6 +54,7 @@
     "typings": "0.6.x",
     "url-loader": "0.5.x",
     "webpack": "1.12.x",
-    "webpack-dev-server": "1.14.x"
+    "webpack-dev-server": "1.14.x",
+    "webpack-fail-plugin": "1.0.x"
   }
 }
