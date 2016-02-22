@@ -1,8 +1,8 @@
 # Master Webpack Build
 
 The project provides a general master configuration for using webpack, typescript and tslint.
-If required the master can be easily customized for example to use an additional plugin or to define
-a different output structure.
+If required the master configuration can be easily customized for example to use an additional 
+plugin or to define a different output structure.
 
 
 ## Installing
@@ -14,13 +14,16 @@ $ npm install k15t-webpack-build
 
 ## Usage
 
-Project wepack-config.js
+To use the master configuration in your project create a new webpack configuration file file e.g. wepack-config.js and add the
+following example lines:
 
 
 ```js
+// include the master configuration in your project
 var master = require('k15t-webpack-build/webpack-master-config.js');
 var extend = require('node.extend');
 
+// default configuration which will be shared for testing and production/development builds
 var defaults = {
     title = 'Project title';
     contextPath = '/project-name';
@@ -30,6 +33,7 @@ var defaults = {
     };
 }
 
+// check if test will be executed
 if (!!process.env.testMode) {
     module.exports = master({
        metadata: extend(true, {}, defaults),
@@ -53,7 +57,7 @@ if (!!process.env.testMode) {
 }
 ```
 
-Examples scripts which can be added directly to the package.json
+Example scripts which can be added directly to the package.json
 
 ```js
 "watch": "npm run watch:dev",
