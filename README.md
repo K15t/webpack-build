@@ -21,22 +21,10 @@ following example lines:
 ```js
 // include the master configuration in your project
 var master = require('k15t-webpack-build/webpack-master-config.js');
-var extend = require('node.extend');
-
-// default configuration which will be shared for testing and production/development builds
-var defaults = {
-    title = 'Project title';
-    contextPath = '/project-name';
-    devServer {
-        host: 'localhost',
-        port: 8090
-    };
-}
 
 // check if test will be executed
 if (!!process.env.testMode) {
     module.exports = master({
-       metadata: extend(true, {}, defaults),
        module: {
             noParse: [
                 utils.getAbsolutePath('zone.js/dist'),
@@ -46,7 +34,9 @@ if (!!process.env.testMode) {
     });
 } else {
     module.exports = master({
-        metadata: extend(true, {}, defaults),
+        metadata: {
+            title = 'Project title'
+        },
         entry: {
             'main': './src/main.ts'
         },
@@ -63,7 +53,7 @@ Example scripts which can be added directly to the package.json
 "watch": "npm run watch:dev",
 "watch:dev": "debug=true ./node_modules/.bin/webpack --watch --config webpack-config.js --progress --profile --colors --display-error-details --display-cached",
 "build": "npm run build:dev",
-"build:dev": "devMode=true debug=true ./node_modules/.bin/webpack --progress --config webpack-config.js --profile --colors --display-error-details --display-cached",
+"build:dev": "devMode=true ./node_modules/.bin/webpack --progress --config webpack-config.js --profile --colors --display-error-details --display-cached",
 "build:prod": "./node_modules/.bin/webpack --config webpack-config.js --progress --profile --colors --display-error-details --display-cached",
 "start:server": "devMode=true ./node_modules/.bin/webpack-dev-server --config webpack-config.js --progress --profile --colors --display-error-details --display-cached --inline",
 "start:tests": "testMode=true ./node_modules/.bin/karma start",
