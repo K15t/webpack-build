@@ -18,6 +18,9 @@ var fs = require('fs');
 const ENV_DEVELOPMENT = 'development';
 const ENV_PROD = 'production';
 
+const DEV_SERVER_PORT = '3000';
+const DEV_SERVER_HOST = 'localhost';
+
 /**
  * Module defining the common build configuration for webpack-based projects.
  *
@@ -29,18 +32,27 @@ module.exports = function(opts) {
     let devModeEnabled = !!process.env.devMode;
     let debugModeEnabled = !!process.env.debug;
 
+
+
     console.log('------------------------------------------------------------------------------------');
     if (devModeEnabled) {
         console.log('  Executing development build');
     } else {
         console.log('  Executing production build');
     }
+    if (testingEnabled) {
+        console.log('  with ' + process.env.ENV + ' ENV running');
+    }
     console.log('------------------------------------------------------------------------------------');
 
     let config = {
 
         metadata: {
-            ENV: devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD
+            ENV: devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD,
+            devServer: {
+                port: DEV_SERVER_PORT,
+                host: DEV_SERVER_HOST
+            }
         },
         devtool: 'source-map',
         debug: debugModeEnabled,
@@ -84,7 +96,7 @@ module.exports = function(opts) {
                         ]
                     },
                     compilerOptions: './tsconfig.json',
-                    exclude: [/\.(spec|e2e)\.ts$/]
+                    exclude: testingEnabled ? [] : [/\.(spec)\.ts$/]
                 },
 
                 {test: /\.json$/, loader: 'json-loader'},
@@ -104,8 +116,8 @@ module.exports = function(opts) {
 
         // don't use devServer for production
         devServer: {
-            port: opts.metadata.devServer.port,
-            host: opts.metadata.devServer.host,
+            port: (opts.metadata && opts.metadata.meta.devServer && opts.metadata.devServer.port) ? opts.metadata.devServer.port : DEV_SERVER_PORT,
+            host: (opts.metadata && opts.metadata.meta.devServer && opts.metadata.devServer.host) ? opts.metadata.devServer.host : DEV_SERVER_HOST,
             historyApiFallback: false,
             contentBase: opts.output.path,
             watchOptions: {
@@ -156,7 +168,7 @@ function getPlugins(devModeEnabled, testingEnabled, opts) {
         'process.env': {
             'ENV': JSON.stringify(envMode),
             'NODE_ENV': JSON.stringify(envMode),
-            'ADD_ON_KEY': JSON.stringify(opts.metadata.addOnKey)
+            'ADD_ON_KEY': (opts.metadata && opts.metadata.addOnKey) ? JSON.stringify(opts.metadata.addOnKey) : ''
         }
     }));
 
