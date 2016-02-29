@@ -207,8 +207,7 @@ function getPlugins(devModeEnabled, testingEnabled, opts) {
             '__decorate': 'ts-helper/decorate',
             '__awaiter': 'ts-helper/awaiter',
             '__extends': 'ts-helper/extends',
-            '__param': 'ts-helper/param',
-            'Reflect': 'es7-reflect-metadata/dist/browser'
+            '__param': 'ts-helper/param'
         }));
         plugins.push(new UglifyJsPlugin({
             mangle: false,
