@@ -116,8 +116,8 @@ module.exports = function(opts) {
 
         // don't use devServer for production
         devServer: {
-            port: (opts.metadata && opts.metadata.meta.devServer && opts.metadata.devServer.port) ? opts.metadata.devServer.port : DEV_SERVER_PORT,
-            host: (opts.metadata && opts.metadata.meta.devServer && opts.metadata.devServer.host) ? opts.metadata.devServer.host : DEV_SERVER_HOST,
+            port: (opts.metadata && opts.metadata.devServer && opts.metadata.devServer.port) ? opts.metadata.devServer.port : DEV_SERVER_PORT,
+            host: (opts.metadata && opts.metadata.devServer && opts.metadata.devServer.host) ? opts.metadata.devServer.host : DEV_SERVER_HOST,
             historyApiFallback: false,
             contentBase: opts.output.path,
             watchOptions: {
