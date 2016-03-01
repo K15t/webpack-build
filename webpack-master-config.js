@@ -32,16 +32,11 @@ module.exports = function(opts) {
     let devModeEnabled = !!process.env.devMode;
     let debugModeEnabled = !!process.env.debug;
 
-
-
     console.log('------------------------------------------------------------------------------------');
     if (devModeEnabled) {
         console.log('  Executing development build');
     } else {
         console.log('  Executing production build');
-    }
-    if (testingEnabled) {
-        console.log('  with ' + process.env.ENV + ' ENV running');
     }
     console.log('------------------------------------------------------------------------------------');
 
@@ -174,7 +169,7 @@ function getPlugins(devModeEnabled, testingEnabled, opts) {
 
     plugins.push(new OccurenceOrderPlugin(true));
 
-    if (testingEnabled) {
+    if (!testingEnabled) {
         plugins.push(new CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.[chunkhash].bundle.js',
