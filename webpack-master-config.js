@@ -100,7 +100,7 @@ module.exports = function(opts) {
             ]
         },
 
-        plugins: getPlugins(devModeEnabled, testingEnabled, opts),
+        plugins: getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts),
 
         // Other module loader config
         tslint: {
@@ -147,7 +147,11 @@ module.exports = function(opts) {
  * @param testingEnabled Boolean if tests are going to be executed
  * @param opts General configuration options
  */
-function getPlugins(devModeEnabled, testingEnabled, opts) {
+function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
+
+    if (typeof opts.getPlugins === 'function') {
+        return opts.getPlugins(devModeEnabled, testingEnabled, debugModeEnabled);
+    }
 
     let plugins = [];
     let envMode = devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD;
@@ -159,12 +163,24 @@ function getPlugins(devModeEnabled, testingEnabled, opts) {
     //     ne successful.
     plugins.push(FailPlugin);
 
+    let envProperties = {
+        'ENV': JSON.stringify(envMode),
+        'NODE_ENV': JSON.stringify(envMode),
+        'ADD_ON_KEY': (opts.metadata && opts.metadata.addOnKey) ? JSON.stringify(opts.metadata.addOnKey) : ''
+    };
+
+    if (opts.envProperties !== null && opts.envProperties !== undefined) {
+        envProperties = extend(true, envProperties, opts.envProperties);
+    }
+
+    if (debugModeEnabled) {
+        console.log('ENV properties:');
+        console.log(envProperties);
+        console.log('------------------------------------------------------------------------------------');
+    }
+
     plugins.push(new webpack.DefinePlugin({
-        'process.env': {
-            'ENV': JSON.stringify(envMode),
-            'NODE_ENV': JSON.stringify(envMode),
-            'ADD_ON_KEY': (opts.metadata && opts.metadata.addOnKey) ? JSON.stringify(opts.metadata.addOnKey) : ''
-        }
+        'process.env': envProperties
     }));
 
     plugins.push(new OccurenceOrderPlugin(true));

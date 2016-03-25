@@ -51,13 +51,11 @@ Example scripts which can be added directly to the package.json
 
 ```js
 "watch": "npm run watch:dev",
-"watch:dev": "debug=true ./node_modules/.bin/webpack --watch --config webpack-config.js --progress --profile --colors --display-error-details --display-cached",
+"watch:dev": "webpack --watch --config webpack-config.js --progress --profile --colors --display-error-details --display-cached",
 "build": "npm run build:dev",
-"build:dev": "devMode=true ./node_modules/.bin/webpack --progress --config webpack-config.js --profile --colors --display-error-details --display-cached",
-"build:prod": "./node_modules/.bin/webpack --config webpack-config.js --progress --profile --colors --display-error-details --display-cached",
-"start:server": "devMode=true ./node_modules/.bin/webpack-dev-server --config webpack-config.js --progress --profile --colors --display-error-details --display-cached --inline",
-"start:tests": "testMode=true ./node_modules/.bin/karma start",
-"create:docs": "./node_modules/.bin/typedoc --options ./node_modules/k15t-webpack-build/build/typedoc.json  src/**/*.ts --out  ./target/doc",
+"build:dev": "devMode=true webpack --progress --config webpack-config.js --profile --colors --display-error-details --display-cached",
+"build:prod": "webpack --config webpack-config.js --progress --profile --colors --display-error-details --display-cached",
+"start:server": "devMode=true webpack-dev-server --config webpack-config.js --progress --profile --colors --display-error-details --display-cached --inline"
 ```
 
 To run a script type open a console withing the project and enter: npm run build
