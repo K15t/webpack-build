@@ -28,16 +28,12 @@ const DEV_SERVER_HOST = 'localhost';
  */
 module.exports = function(opts) {
 
-    let testingEnabled = !!process.env.testMode;
-    let devModeEnabled = !!process.env.devMode;
-    let debugModeEnabled = !!process.env.debug;
+    let testingEnabled = (process.env.testMode === 'true' || process.env.testMode === true) || false;
+    let devModeEnabled = (process.env.devMode === 'true' || process.env.devMode === true) || false;
+    let debugModeEnabled = (process.env.debug === 'true' || process.env.debug === true) || false;
 
     console.log('------------------------------------------------------------------------------------');
-    if (devModeEnabled) {
-        console.log('  Executing development build');
-    } else {
-        console.log('  Executing production build');
-    }
+    console.log(`Executing build for ` + (devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD));
     console.log('------------------------------------------------------------------------------------');
 
     let config = {
@@ -149,12 +145,38 @@ module.exports = function(opts) {
  */
 function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
-    if (typeof opts.getPlugins === 'function') {
-        return opts.getPlugins(devModeEnabled, testingEnabled, debugModeEnabled);
+    // ... check if the plugin sections is desired to completely defined by the project build.
+    if (typeof opts.redefinePlugins === 'function') {
+
+        console.log("Using only the plugins defined in the project build configuration!");
+
+        let plugins = opts.redefinePlugins(devModeEnabled, testingEnabled, debugModeEnabled);
+        opts.redefinePlugins = {};
+        return redefinePlugins;
     }
 
     let plugins = [];
     let envMode = devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD;
+
+    // ... check if plugins needs to add either if a function called addPlugins or an array for plugins is already defined.
+    if (opts.plugins != null && opts.plugins !== undefined) {
+
+        let pluginsToAdd = null;
+
+        if (typeof opts.addPlugins === 'function') {
+            pluginsToAdd = opts.addPlugins(devModeEnabled, testingEnabled, debugModeEnabled);
+            opts.addPlugins = {};
+        } else if (opts.plugins.constructor === Array) {
+            pluginsToAdd = opts.plugins;
+            opts.plugins = {};
+        }
+
+        if (pluginsToAdd != null) {
+            for (var index in pluginsToAdd) {
+                plugins.push(pluginsToAdd[index]);
+            }
+        }
+    }
 
     // ---------------------------------------------------------- COMMON
 
@@ -170,6 +192,7 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
     };
 
     if (opts.envProperties !== null && opts.envProperties !== undefined) {
+        console.log('Found custom environment properties which will be added to the build context');
         envProperties = extend(true, envProperties, opts.envProperties);
     }
 
@@ -211,6 +234,8 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
     // ---------------------------------------------------------- PROD
 
     if (!devModeEnabled) {
+
+        console.log('Adding plugins for production purpose');
 
         plugins.push(new DedupePlugin());
         plugins.push(new ProvidePlugin({

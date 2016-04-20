@@ -1,7 +1,7 @@
 {
   "name": "k15t-webpack-build",
   "version": "0.0.11",
-  "description": "Base webpack build script including validation and test support",
+  "description": "Master configuration for building projects with webpack",
   "main": "index.js",
   "repository": {
     "type": "git",
