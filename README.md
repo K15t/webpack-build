@@ -43,7 +43,7 @@ That's all! If you now build your project it automatically include the following
 * Executes the TypeScript compiler and transpile it to the desired EcmaScripts version 
 * Replace all placeholder defined as envProperties
 * In case your project has a index.html it will be copied to the target folder
-* In case your project has a asset folder all included assets will be copied to the target folder
+* In case your project has an asset folder all included assets will be copied to the target folder
 * Removes all unused code parts
 * Compress and ugligfy the code 
 
