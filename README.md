@@ -97,7 +97,7 @@ or if you want to use only the plugins from your projects:
 
 ```
 
-In case you want to use project specific placeholder e.g. for conditional imports you can do the following:
+In case you want to use project specific placeholders e.g. for conditional imports you can do the following:
 
 ```javascript
 {
