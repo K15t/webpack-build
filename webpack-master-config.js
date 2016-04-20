@@ -159,22 +159,19 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
     let envMode = devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD;
 
     // ... check if plugins needs to add either if a function called addPlugins or an array for plugins is already defined.
-    if (opts.plugins != null && opts.plugins !== undefined) {
+    let pluginsToAdd = null;
 
-        let pluginsToAdd = null;
+    if (opts.plugins != null && opts.plugins !== undefined && opts.plugins.constructor === Array) {
+        pluginsToAdd = opts.plugins;
+        opts.plugins = {};
+    } else if (typeof opts.addPlugins === 'function') {
+        pluginsToAdd = opts.addPlugins(devModeEnabled, testingEnabled, debugModeEnabled);
+        opts.addPlugins = {};
+    }
 
-        if (typeof opts.addPlugins === 'function') {
-            pluginsToAdd = opts.addPlugins(devModeEnabled, testingEnabled, debugModeEnabled);
-            opts.addPlugins = {};
-        } else if (opts.plugins.constructor === Array) {
-            pluginsToAdd = opts.plugins;
-            opts.plugins = {};
-        }
-
-        if (pluginsToAdd != null) {
-            for (var index in pluginsToAdd) {
-                plugins.push(pluginsToAdd[index]);
-            }
+    if (pluginsToAdd != null) {
+        for (var index in pluginsToAdd) {
+            plugins.push(pluginsToAdd[index]);
         }
     }
 
