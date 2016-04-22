@@ -1,6 +1,6 @@
 {
   "name": "k15t-webpack-build",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Master configuration for building projects with webpack",
   "main": "index.js",
   "repository": {

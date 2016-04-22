@@ -163,10 +163,10 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
     if (opts.plugins != null && opts.plugins !== undefined && opts.plugins.constructor === Array) {
         pluginsToAdd = opts.plugins;
-        opts.plugins = {};
+        opts.plugins = [];
     } else if (typeof opts.addPlugins === 'function') {
         pluginsToAdd = opts.addPlugins(devModeEnabled, testingEnabled, debugModeEnabled);
-        opts.addPlugins = {};
+        opts.addPlugins = [];
     }
 
     if (pluginsToAdd != null) {
