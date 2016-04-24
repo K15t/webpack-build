@@ -159,6 +159,7 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
     let envMode = devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD;
 
     // ... check if plugins needs to add either if a function called addPlugins or an array for plugins is already defined.
+    //     The additional plugins will be add at the end to support to override the default plugins.
     let pluginsToAdd = null;
 
     if (opts.plugins != null && opts.plugins !== undefined && opts.plugins.constructor === Array) {
@@ -167,12 +168,6 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
     } else if (typeof opts.addPlugins === 'function') {
         pluginsToAdd = opts.addPlugins(devModeEnabled, testingEnabled, debugModeEnabled);
         opts.addPlugins = [];
-    }
-
-    if (pluginsToAdd != null) {
-        for (var index in pluginsToAdd) {
-            plugins.push(pluginsToAdd[index]);
-        }
     }
 
     // ---------------------------------------------------------- COMMON
@@ -250,6 +245,13 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
                 warnings: false
             }
         }));
+    }
+
+    // ... add additional custom plugins if there are any defined
+    if (pluginsToAdd != null) {
+        for (var index in pluginsToAdd) {
+            plugins.push(pluginsToAdd[index]);
+        }
     }
 
     return plugins;
