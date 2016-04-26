@@ -245,7 +245,17 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
         plugins.push(new LicenseFinderPlugin({
             base: '.',
-            fileName: 'THIRD-PARTY-LICENSE.txt'
+            permittedLicenses: ['MIT', 'Apache-2.0'],
+            outputFile: 'THIRD-PARTY-LICENSE.txt',
+
+            /**
+             * license config is a simple json file mapping the package id to it's license
+             * e.g.
+             * {
+             *    'k15t-aui-ng2@0.0.23' : 'MIT'
+             * }
+             */
+            licenseConfig: 'THIRD-PARTY-LICENSE.json'
         }));
         plugins.push(new DedupePlugin());
         plugins.push(new ProvidePlugin({
