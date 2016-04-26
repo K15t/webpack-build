@@ -100,7 +100,19 @@ module.exports = function(opts) {
 
         // Other module loader config
         tslint: {
-            configuration: require('./tslint.config.json'),
+            configuration: (function () {
+                var rules = require('./tslint.config.json').rules;
+
+                if (opts.appPrefix) {
+                    rules['directive-selector-prefix'] = [true, opts.appPrefix];
+                    rules["component-selector-prefix"] = [true, opts.appPrefix];
+                    rules["pipe-naming"] = [true, "camelCase", opts.appPrefix];
+                }
+
+                return {
+                    rules: rules
+                };
+            })(),
             rulesDirectory: ['node_modules/codelyzer'],
             emitErrors: true,
             failOnHint: true
