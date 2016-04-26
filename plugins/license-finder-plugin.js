@@ -7,7 +7,7 @@ var RawSource = require('webpack-core/lib/RawSource');
 
 function LicenseFinderPlugin (config) {
   this.base = config.base;
-  this.licences = getLicenses(config.licenseConfig);
+  this.licenses = getLicenses(config.licenseConfig);
   this.outputFile = config.outputFile;
   this.permittedLicenses = config.permittedLicenses;
 }
@@ -43,11 +43,11 @@ LicenseFinderPlugin.prototype = {
           throw new Error('Parsing licenses failed: ' + JSON.stringify(err));
 
         } else {
-          var permittedLicences = that.permittedLicenses;
-          var unlicensedDepedencies = that.getUnlicensed(permittedLicences, dependencies);
+          var permittedLicenses = that.permittedLicenses;
+          var unlicensedDepedencies = that.getUnlicensed(permittedLicenses, dependencies);
 
           if (unlicensedDepedencies.length > 0) {
-            throw new Error(that.formatDependencyError(permittedLicences, unlicensedDepedencies));
+            throw new Error(that.formatDependencyError(permittedLicenses, unlicensedDepedencies));
 
           } else {
             formatter.render(dependencies, {}, function (err, output) {
@@ -66,7 +66,7 @@ LicenseFinderPlugin.prototype = {
   },
 
   getLicense : function (dependency) {
-    return this.licences[dependency.id] || dependency.licenseSources.package.summary()[0] || 'none';
+    return this.licenses[dependency.id] || dependency.licenseSources.package.summary()[0] || 'none';
   },
 
   getUnlicensed : function getUnlicensed (permittedLicenses, dependencies) {
