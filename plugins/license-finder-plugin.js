@@ -9,7 +9,7 @@ function LicenseFinderPlugin (config) {
   this.base = config.base;
   this.licenses = getLicenses(config.licenseConfig);
   this.outputFile = config.outputFile;
-  this.permittedLicenses = config.permittedLicenses;
+  this.notAllowedLicenses = config.notAllowedLicenses || [];
 }
 
 function getLicenses (licenseConfig) {
@@ -25,7 +25,6 @@ function getLicenses (licenseConfig) {
 
   return licenses || {};
 }
-
 
 LicenseFinderPlugin.prototype = {
 
@@ -43,11 +42,10 @@ LicenseFinderPlugin.prototype = {
           throw new Error('Parsing licenses failed: ' + JSON.stringify(err));
 
         } else {
-          var permittedLicenses = that.permittedLicenses;
-          var unlicensedDepedencies = that.getUnlicensed(permittedLicenses, dependencies);
+          var unlicensedDepedencies = that.getUnlicensed(dependencies);
 
           if (unlicensedDepedencies.length > 0) {
-            throw new Error(that.formatDependencyError(permittedLicenses, unlicensedDepedencies));
+            throw new Error(that.formatDependencyError(unlicensedDepedencies));
 
           } else {
             formatter.render(dependencies, {}, function (err, output) {
@@ -69,13 +67,15 @@ LicenseFinderPlugin.prototype = {
     return this.licenses[dependency.id] || dependency.licenseSources.package.summary()[0] || 'none';
   },
 
-  getUnlicensed : function getUnlicensed (permittedLicenses, dependencies) {
+  getUnlicensed : function getUnlicensed (dependencies) {
     return dependencies.filter(function (dependency) {
-      return permittedLicenses.indexOf(this.getLicense(dependency)) === -1;
+      var license = this.getLicense(dependency);
+
+      return license == 'none' || this.notAllowedLicenses.indexOf(license) !== -1;
     }.bind(this));
   },
 
-  formatDependencyError: function (permittedLicenses, dependencies) {
+  formatDependencyError: function (dependencies) {
     var dependenciesList = dependencies
       .map(function (dependency) {
         return dependency.id + ': ' + this.getLicense(dependency);
@@ -84,7 +84,7 @@ LicenseFinderPlugin.prototype = {
 
     return (
       'Checking licenses failed: \n' +
-      '(allowed: ' + permittedLicenses.join(',') + ')\n' +
+      '(not allowed: ' + this.notAllowedLicenses.join(',') + ')\n' +
       dependenciesList
     );
   }

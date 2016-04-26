@@ -245,7 +245,7 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
         plugins.push(new LicenseFinderPlugin({
             base: '.',
-            permittedLicenses: ['MIT', 'Apache-2.0'],
+            notAllowedLicenses: [],
             outputFile: 'THIRD-PARTY-LICENSE.txt',
 
             /**
