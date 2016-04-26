@@ -101,6 +101,7 @@ module.exports = function(opts) {
         // Other module loader config
         tslint: {
             configuration: require('./tslint.config.json'),
+            rulesDirectory: ['node_modules/codelyzer'],
             emitErrors: true,
             failOnHint: true
         },
