@@ -41,6 +41,7 @@
     "typings": "0.6.x",
     "webpack": "1.12.x",
     "webpack-dev-server": "1.14.x",
+    "nlf": "^1.4.0"
     "webpack-fail-plugin": "1.0.x",
     "codelyzer": "0.0.x"
   }
