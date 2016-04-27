@@ -1,6 +1,6 @@
 {
   "name": "k15t-webpack-build",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Master configuration for building projects with webpack",
   "main": "index.js",
   "repository": {
@@ -31,6 +31,7 @@
     "node.extend": "1.1.x",
     "raw-loader": "0.5.x",
     "rimraf": "2.4.x",
+    "style-loader": "0.13.x",
     "ts-helper": "0.0.x",
     "ts-loader": "0.8.x",
     "tsconfig-lint": "0.4.x",
@@ -38,9 +39,9 @@
     "tslint-loader": "2.1.x",
     "typescript": "1.8.x",
     "typings": "0.6.x",
-    "style-loader": "0.13.x",
     "webpack": "1.12.x",
     "webpack-dev-server": "1.14.x",
-    "webpack-fail-plugin": "1.0.x"
+    "webpack-fail-plugin": "1.0.x",
+    "codelyzer": "0.0.x"
   }
 }
