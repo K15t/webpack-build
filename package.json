@@ -36,12 +36,12 @@
     "ts-loader": "0.8.x",
     "tsconfig-lint": "0.4.x",
     "tslint": "3.3.x",
-    "tslint-loader": "^2.1.4",
+    "tslint-loader": "2.1.x",
     "typescript": "1.8.x",
     "typings": "0.6.x",
     "webpack": "1.12.x",
     "webpack-dev-server": "1.14.x",
     "webpack-fail-plugin": "1.0.x",
-    "codelyzer": "0.0.15"
+    "codelyzer": "0.0.x"
   }
 }
