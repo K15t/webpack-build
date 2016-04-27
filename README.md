@@ -1,4 +1,4 @@
-# Master Webpack Build
+# About Master Webpack Build
 
 The project provides a general master configuration for using webpack, typescript and tslint.
 If required the master configuration can be easily customized for example to use an additional 
