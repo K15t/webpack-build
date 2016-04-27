@@ -103,10 +103,10 @@ module.exports = function(opts) {
             configuration: (function () {
                 var rules = require('./tslint.config.json').rules;
 
-                if (opts.appPrefix) {
-                    rules['directive-selector-prefix'] = [true, opts.appPrefix];
-                    rules["component-selector-prefix"] = [true, opts.appPrefix];
-                    rules["pipe-naming"] = [true, "camelCase", opts.appPrefix];
+                if (opts.metadata.appPrefix) {
+                    rules['directive-selector-prefix'] = [true, opts.metadata.appPrefix];
+                    rules["component-selector-prefix"] = [true, opts.metadata.appPrefix];
+                    rules["pipe-naming"] = [true, "camelCase", opts.metadata.appPrefix];
                 }
 
                 return {
