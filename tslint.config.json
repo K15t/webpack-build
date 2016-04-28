@@ -3,8 +3,7 @@
     "class-name": true,
     "curly": true,
     "comment-format": [
-      true,
-      "check-space"
+      true
     ],
     "eofline": true,
     "indent": "spaces",
