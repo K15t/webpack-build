@@ -1,6 +1,6 @@
 {
   "name": "k15t-webpack-build",
-  "version": "0.0.16",
+  "version": "0.1.0",
   "description": "Master configuration for building projects with webpack",
   "main": "index.js",
   "repository": {
@@ -8,6 +8,7 @@
     "url": "https://github.com/K15t/webpack-build.git"
   },
   "files": [
+    "plugins",
     "*.json",
     "*.js"
   ],
