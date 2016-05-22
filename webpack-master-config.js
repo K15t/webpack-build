@@ -11,6 +11,7 @@ var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var FailPlugin = require('webpack-fail-plugin');
+var LicenseFinderPlugin = require('./plugins/license-finder-plugin');
 var extend = require('node.extend');
 var utils = require('./utils');
 var fs = require('fs');
@@ -242,6 +243,20 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
         console.log('Adding plugins for production purpose');
 
+        plugins.push(new LicenseFinderPlugin({
+            base: '.',
+            notAllowedLicenses: [],
+            outputFile: 'THIRD-PARTY-LICENSE.txt',
+
+            /**
+             * license config is a simple json file mapping the package id to it's license
+             * e.g.
+             * {
+             *    'k15t-aui-ng2@0.0.23' : 'MIT'
+             * }
+             */
+            licenseConfig: 'THIRD-PARTY-LICENSE.json'
+        }));
         plugins.push(new DedupePlugin());
         plugins.push(new ProvidePlugin({
             '__metadata': 'ts-helper/metadata',

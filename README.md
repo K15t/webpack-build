@@ -1,7 +1,7 @@
 # About Master Webpack Build
 
 The project provides a general master configuration for using webpack, typescript and tslint.
-If required the master configuration can be easily customized for example to use an additional 
+If required the master configuration can be easily customized for example to use an additional
 plugin or to define a different output structure.
 
 
