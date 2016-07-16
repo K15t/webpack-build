@@ -1,6 +1,6 @@
 {
   "name": "k15t-webpack-build",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Master configuration for building projects with webpack",
   "main": "index.js",
   "repository": {
@@ -26,12 +26,17 @@
   },
   "homepage": "https://github.com/K15t/webpack-build",
   "dependencies": {
+    "codelyzer": "0.0.x",
     "copy-webpack-plugin": "0.3.x",
     "html-webpack-plugin": "1.7.x",
     "json-loader": "0.5.x",
+    "ngrok": "2.2.x",
+    "nlf": "1.4.x",
     "node.extend": "1.1.x",
     "raw-loader": "0.5.x",
+    "request": "2.69.x",
     "rimraf": "2.4.x",
+    "rsvp": "3.2.x",
     "style-loader": "0.13.x",
     "ts-helper": "0.0.x",
     "ts-loader": "0.8.x",
@@ -42,8 +47,6 @@
     "typings": "0.6.x",
     "webpack": "1.12.x",
     "webpack-dev-server": "1.14.x",
-    "webpack-fail-plugin": "1.0.x",
-    "nlf": "^1.4.0",
-    "codelyzer": "0.0.x"
+    "webpack-fail-plugin": "1.0.x"
   }
 }

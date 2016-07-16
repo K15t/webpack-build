@@ -19,9 +19,6 @@ var fs = require('fs');
 const ENV_DEVELOPMENT = 'development';
 const ENV_PROD = 'production';
 
-const DEV_SERVER_PORT = '3000';
-const DEV_SERVER_HOST = 'localhost';
-
 /**
  * Module defining the common build configuration for webpack-based projects.
  *
@@ -40,11 +37,9 @@ module.exports = function(opts) {
     let config = {
 
         metadata: {
-            ENV: devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD,
-            devServer: {
-                port: DEV_SERVER_PORT,
-                host: DEV_SERVER_HOST
-            }
+            'outputlicenseSummaryFile': 'THIRD-PARTY-LICENSE.txt',
+            notAllowedLicenses: [],
+            ENV: devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD
         },
         devtool: 'source-map',
         debug: debugModeEnabled,
@@ -52,9 +47,9 @@ module.exports = function(opts) {
         entry: {},
 
         output: {
-            filename: '[name].[chunkhash].bundle.js',
-            sourceMapFilename: '[name].[chunkhash].bundle.map',
-            chunkFilename: '[id].[chunkhash].chunk.js'
+            filename: devModeEnabled ? '[name].bundle.js' : '[name].[chunkhash].bundle.js',
+            sourceMapFilename: devModeEnabled ? '[name].bundle.map' : '[name].[chunkhash].bundle.map',
+            chunkFilename: devModeEnabled ? '[id].chunk.js' : '[id].[chunkhash].chunk.js'
         },
 
         resolve: {
@@ -101,7 +96,7 @@ module.exports = function(opts) {
 
         // Other module loader config
         tslint: {
-            configuration: (function () {
+            configuration: (function() {
                 var rules = require('./tslint.config.json').rules;
 
                 if (opts.metadata.appPrefix) {
@@ -116,19 +111,7 @@ module.exports = function(opts) {
             })(),
             rulesDirectory: ['node_modules/codelyzer'],
             emitErrors: true,
-            failOnHint: true
-        },
-
-        // don't use devServer for production
-        devServer: {
-            port: (opts.metadata && opts.metadata.devServer && opts.metadata.devServer.port) ? opts.metadata.devServer.port : DEV_SERVER_PORT,
-            host: (opts.metadata && opts.metadata.devServer && opts.metadata.devServer.host) ? opts.metadata.devServer.host : DEV_SERVER_HOST,
-            historyApiFallback: false,
-            contentBase: opts.output.path,
-            watchOptions: {
-                aggregateTimeout: 300,
-                poll: 1000
-            }
+            failOnHint: !devModeEnabled
         },
 
         // we need this due to problems with es6-shim
@@ -186,11 +169,6 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
     // ---------------------------------------------------------- COMMON
 
-    // ... the plugin is required to enforce to return a correct exit code which
-    //     will be required e.g. building with maven and in case of errors the build should not
-    //     ne successful.
-    plugins.push(FailPlugin);
-
     let envProperties = {
         'ENV': JSON.stringify(envMode),
         'NODE_ENV': JSON.stringify(envMode),
@@ -217,7 +195,7 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
     if (!testingEnabled) {
         plugins.push(new CommonsChunkPlugin({
             name: 'vendor',
-            filename: 'vendor.[chunkhash].bundle.js',
+            filename: devModeEnabled ? 'vendor.bundle.js' : 'vendor.[hash].bundle.js',
             minChunks: Infinity
         }));
     }
@@ -245,19 +223,23 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
         plugins.push(new LicenseFinderPlugin({
             base: '.',
-            notAllowedLicenses: [],
-            outputFile: 'THIRD-PARTY-LICENSE.txt',
-
-            /**
-             * license config is a simple json file mapping the package id to it's license
-             * e.g.
-             * {
-             *    'k15t-aui-ng2@0.0.23' : 'MIT'
-             * }
-             */
+            notAllowedLicenses: opt.metadata.notAllowedLicenses,
+            outputFile: opts.metadata.outputlicenseSummaryFile,
+            // license config is a simple json file mapping the package id to it's license
+            // e.g.
+            // {
+            //    'k15t-aui-ng2@0.0.23' : 'MIT'
+            // }
             licenseConfig: 'THIRD-PARTY-LICENSE.json'
         }));
+
+        // ... the plugin is required to enforce to return a correct exit code which
+        //     will be required e.g. building with maven and in case of errors the build should not
+        //     ne successful.
+        plugins.push(FailPlugin);
+
         plugins.push(new DedupePlugin());
+
         plugins.push(new ProvidePlugin({
             '__metadata': 'ts-helper/metadata',
             '__decorate': 'ts-helper/decorate',
@@ -265,10 +247,11 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
             '__extends': 'ts-helper/extends',
             '__param': 'ts-helper/param'
         }));
+
         plugins.push(new UglifyJsPlugin({
-            mangle: false,
-            comments: false,
             compress: {
+                unused: true,
+                dead_code: true,
                 screw_ie8: true,
                 warnings: false
             }
