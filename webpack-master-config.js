@@ -223,7 +223,7 @@ function getPlugins(devModeEnabled, testingEnabled, debugModeEnabled, opts) {
 
         plugins.push(new LicenseFinderPlugin({
             base: '.',
-            notAllowedLicenses: opt.metadata.notAllowedLicenses,
+            notAllowedLicenses: opts.metadata.notAllowedLicenses,
             outputFile: opts.metadata.outputlicenseSummaryFile,
             // license config is a simple json file mapping the package id to it's license
             // e.g.
