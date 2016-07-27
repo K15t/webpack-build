@@ -58,20 +58,20 @@ var waitUntilServersAreReady = function(hostRegUrl, descriptorUrl, user, passwor
             uri: hostRegUrl
         }, function(err, res) {
             if (res !== undefined && res.statusCode === 200) {
-                console.log("Local server is available (" + hostRegUrl + ")");
+                console.log("Cloud instance is available (" + hostRegUrl + ")");
                 request.head({
                     uri: descriptorUrl
                 }, function(err, res) {
                     if (res !== undefined && res.statusCode === 200) {
-                        console.log("Cloud instance is available (" + descriptorUrl + ")");
+                        console.log("Server instance is available (" + descriptorUrl + ")");
                         registerAddOnDescriptor(hostRegUrl, descriptorUrl, user, password);
                     } else {
-                        console.log("Cloud instance is not available under " + descriptorUrl);
+                        console.log("Server instance is not available under " + descriptorUrl);
                         waitUntilServersAreReady(hostRegUrl, descriptorUrl, user, password);
                     }
                 })
             } else {
-                console.log("Waiting for local server under " + hostRegUrl);
+                console.log("Waiting for cloud instance (" + hostRegUrl + ")");
                 waitUntilServersAreReady(hostRegUrl, descriptorUrl, user, password);
             }
         });
