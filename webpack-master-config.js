@@ -54,12 +54,12 @@ module.exports = function(opts) {
 
         resolve: {
             cache: false,
-            extensions: ['', '.ts', '.js', '.json', '.css', '.html']
+            extensions: ['', '.ts', '.tsx', '.js', '.json', '.css', '.html']
         },
 
         module: {
             preLoaders: [{
-                test: /\.ts$/,
+                test: /\.tsx?$/,
                 loader: 'tslint-loader',
                 exclude: [
                     /node_modules/
@@ -67,7 +67,7 @@ module.exports = function(opts) {
             }],
             loaders: [
                 {
-                    test: /\.ts$/,
+                    test: /\.tsx?$/,
                     loader: 'ts-loader',
                     query: {
                         // remove TypeScript helpers to be injected below by DefinePlugin
@@ -83,7 +83,7 @@ module.exports = function(opts) {
                         ]
                     },
                     compilerOptions: './tsconfig.json',
-                    exclude: testingEnabled ? [] : [/\.(spec)\.ts$/]
+                    exclude: testingEnabled ? [] : [/\.(spec)\.tsx?$/]
                 },
 
                 {test: /\.json$/, loader: 'json-loader'},
