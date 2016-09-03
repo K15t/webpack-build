@@ -23,7 +23,7 @@ const ENV_PROD = 'production';
 function mergeDefaultConfig(opts) {
 
     let devModeEnabled = isDevelopMode();
-    let debugModeEnabled = isDevelopMode();
+    let debugModeEnabled = isDebugMode();
 
     console.log('------------------------------------------------------------------------------------');
     console.log(`Executing build for ` + (devModeEnabled ? ENV_DEVELOPMENT : ENV_PROD));
