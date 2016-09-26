@@ -1,7 +1,7 @@
 {
   "name": "k15t-webpack-build",
-  "version": "2.0.1",
-  "description": "Base configuration and utils for building projects with webpack",
+  "version": "2.0.2",
+  "description": "Base configuration and utils for building Atlassian connect projects with webpack",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -16,9 +16,8 @@
   "keywords": [
     "webpack",
     "atlassian",
-    "angular",
-    "frontend",
-    "typescript"
+    "connect",
+    "frontend"
   ],
   "author": "Sven Walter <sven@k15t.com> (http://www.k15t.com)",
   "license": "MIT",
@@ -26,9 +25,10 @@
     "url": "https://github.com/K15t/webpack-build/issues"
   },
   "homepage": "https://github.com/K15t/webpack-build",
-  "dependencies": {
+  "devDependencies": {
     "copy-webpack-plugin": "0.3.x",
     "json-loader": "0.5.x",
+    "mkdirp": "0.5.x",
     "ngrok": "2.2.x",
     "nlf": "1.4.x",
     "raw-loader": "0.5.x",
