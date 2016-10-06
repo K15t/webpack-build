@@ -109,9 +109,10 @@ function isTestMode() {
  *
  * @param config confid to merge the plugins into
  * @param notAllowedLicenses array of string of forbidden licenses
+ * @param licenseConfig license config is a simple json mapping object the package id to it's license
  * @param outputlicenseSummaryFile full qualified path of the summary file which will be created at the end
  */
-function mergeProductionPlugins(config, notAllowedLicenses, outputlicenseSummaryFile) {
+function mergeProductionPlugins(config, notAllowedLicenses, licenseConfig, outputlicenseSummaryFile) {
 
     return merge(config, {
         plugins: [
@@ -128,12 +129,12 @@ function mergeProductionPlugins(config, notAllowedLicenses, outputlicenseSummary
                 base: '.',
                 notAllowedLicenses: notAllowedLicenses || [],
                 outputFile: outputlicenseSummaryFile || 'THIRD-PARTY-LICENSE.txt',
-                // license config is a simple json file mapping the package id to it's license
+                // license config is a simple json mapping object the package id to it's license
                 // e.g.
                 // {
                 //    'k15t-aui-ng2@0.0.23' : 'MIT'
                 // }
-                licenseConfig: 'THIRD-PARTY-LICENSE.json'
+                licenseConfig: licenseConfig || {}
             }),
 
             // ... the plugin is required to enforce to return a correct exit code which
