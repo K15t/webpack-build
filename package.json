@@ -32,7 +32,7 @@
     "ngrok": "2.2.x",
     "nlf": "1.4.x",
     "raw-loader": "0.5.x",
-    "request": "2.69.x",
+    "request": "2.75.x",
     "rimraf": "2.4.x",
     "rsvp": "3.2.x",
     "webpack": "1.12.x",
