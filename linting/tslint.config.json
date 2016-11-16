@@ -24,7 +24,7 @@
     "no-duplicate-variable": true,
     "no-empty": false,
     "no-eval": true,
-    "no-trailing-comma": true,
+    "trailing-comma": true,
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
     "no-unused-variable": false,
@@ -60,22 +60,6 @@
       "check-decl",
       "check-operator",
       "check-separator"
-    ],
-    "directive-selector-name": [true, "camelCase"],
-    "component-selector-name": [true, "camelCase"],
-    "directive-selector-type": [true, "attribute"],
-    "component-selector-type": [true, "element"],
-    "use-input-property-decorator": true,
-    "use-output-property-decorator": true,
-    "use-host-property-decorator": true,
-    "no-attribute-parameter-decorator": true,
-    "no-input-rename": true,
-    "no-output-rename": true,
-    "no-forward-ref" :true,
-    "use-life-cycle-interface": true,
-    "use-pipe-transform-interface": true,
-    "pipe-naming": [true, "camelCase"],
-    "component-class-suffix": true,
-    "directive-class-suffix": true
+    ]
   }
 }
