@@ -105,6 +105,37 @@ function isTestMode() {
 }
 
 /**
+ * @returns {*|boolean} build state related to the cli argument targetPlatform e.g. --targetPlatform=cloud.
+ */
+function isCloudBuild() {
+    var arg = getCommandLineArg('--targetPlatform');
+    return arg && arg.indexOf('--targetPlatform=cloud') != -1;
+}
+
+/**
+ * @returns {*|string} version related to the cli argument buildVersion --buildVersion=1.2.3 or "" if undefined.
+ */
+function getBuildVersion() {
+    const UNKNOWN = '""';
+    var arg = getCommandLineArg('--buildVersion');
+    if (arg) {
+        let searchVersionRegEx = /--buildVersion=(\S+)/;
+        let result = searchVersionRegEx.exec(arg);
+        return result ? '"' + result[1] + '"' : UNKNOWN;
+    }
+    return UNKNOWN;
+}
+
+function getCommandLineArg(param) {
+    for (var i = 0; i < process.argv.length; i++) {
+        if (process.argv[i].indexOf(param) != -1) {
+            return process.argv[i];
+        }
+    }
+    return undefined;
+}
+
+/**
  * Merge defined plugins for production e.g. to check the licenses, uglify code or optimize chunks
  *
  * @param config confid to merge the plugins into
@@ -162,7 +193,10 @@ module.exports = {
     isDevelopMode,
     isDebugMode,
     isTestMode,
+    isCloudBuild,
     getMode,
+    getBuildVersion,
+    getCommandLineArg,
     mergeDefaultConfig,
     mergeProductionPlugins
 };
