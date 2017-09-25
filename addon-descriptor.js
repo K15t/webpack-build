@@ -3,70 +3,32 @@
 'use strict';
 
 var request = require('request');
-var RSVP = require('rsvp');
 var ngrok = require('ngrok');
-
-var registerAddOnDescriptor = function(hostRegUrl, descriptorUrl, user, password) {
-
-    // default authentication credentials against Confluence
-    var authCredentials = {
-        'user': user,
-        'pass': password,
-        'sendImmediately': true
-    };
-
-    return new RSVP.Promise(function(resolve, reject) {
-        console.log('Request url for getting upm-token ' + hostRegUrl + '/rest/plugins/1.0/');
-        request.head({
-            uri: hostRegUrl + '/rest/plugins/1.0/',
-            jar: false,
-            auth: authCredentials
-        }, function(err, res) {
-
-            console.log('Result of getting upm-token: ' + res.statusCode);
-
-            if (err || (res && (res.statusCode < 200 || res.statusCode > 299))) {
-                return reject([err, res]);
-            }
-
-            var upmToken = res.headers['upm-token'];
-
-            console.log('Request url for updating add-on descriptor ' + descriptorUrl);
-            request.post({
-                uri: hostRegUrl + '/rest/plugins/1.0/?token=' + upmToken,
-                headers: {'content-type': 'application/vnd.atl.plugins.remote.install+json'},
-                body: JSON.stringify({pluginUri: descriptorUrl}),
-                jar: false,
-                auth: authCredentials
-            }, function(err, res) {
-                console.log('Result of updating add-on descriptor: ' + res.statusCode);
-                if (err || (res && res.statusCode !== 202)) {
-                    return reject([err, res]);
-                }
-                console.log('Successfully updated add-on descriptor');
-                resolve();
-            });
-        });
-
-    });
-};
+var upmInstall = require('upm-install');
 
 var waitUntilServersAreReady = function(hostRegUrl, descriptorUrl, user, password) {
-    console.log("Check if the local server and the cloud instance are available ...");
+    console.log("Check if the local server %s and the cloud instance %s are available ...", descriptorUrl, hostRegUrl);
     setTimeout(function() {
-        request.head({
+        request.get({
             uri: hostRegUrl
         }, function(err, res) {
             if (res !== undefined && res.statusCode === 200) {
-                console.log("Cloud instance is available (" + hostRegUrl + ")");
+                green("Cloud instance is available (" + hostRegUrl + ")");
                 request.head({
                     uri: descriptorUrl
                 }, function(err, res) {
                     if (res !== undefined && res.statusCode === 200) {
-                        console.log("Server instance is available (" + descriptorUrl + ")");
-                        registerAddOnDescriptor(hostRegUrl, descriptorUrl, user, password);
+                        green("Server instance is available (" + descriptorUrl + ")");
+                        upmInstall({
+                            descriptorUrl: descriptorUrl,
+                            productUrl: hostRegUrl,
+                            username: user,
+                            password: password
+                        })
+                            .then(() => green('Successfully installed app descriptor ' + descriptorUrl + ' to ' + hostRegUrl))
+                            .catch((err) => red('Error installing app descriptor ' + descriptorUrl + ' to ' + hostRegUrl + ': ' + err));
                     } else {
-                        console.log("Server instance is not available under " + descriptorUrl);
+                        red("Server instance is not available under " + descriptorUrl);
                         waitUntilServersAreReady(hostRegUrl, descriptorUrl, user, password);
                     }
                 })
@@ -78,19 +40,40 @@ var waitUntilServersAreReady = function(hostRegUrl, descriptorUrl, user, passwor
     }, 5000);
 };
 
-function register(callback, devInstanceAccessInfo) {
-    ngrok.connect(3000, function(err, url) {
+function green(logText) {
+    console.log('\x1b[32m%s\x1b[0m', logText);
+}
+
+function red(logText) {
+    console.log('\x1b[31m%s\x1b[0m', logText);
+}
+
+/**
+ * @param callback function that is called once the tunnel is enabled, with the tunnel URL.
+ * @param config, configuration object which can contain baseUrl, user, password for the atlassian.net developer instance.
+ *  If user and password are defined, these credentials will be used to (re-)install the app descriptor, otherwise this
+ *  will be skipped. The user property must contain the Atlassian ID name, i.e. the email address.
+ *  If the ngrok property exists, it can contain the ngrok config object as defined here: https://www.npmjs.com/package/ngrok#options .
+ */
+function register(callback, config) {
+    console.log('Establishing ngrok tunnel');
+    let ngrokConfig = Object.assign({"addr": 3000}, config.ngrok);
+    ngrok.connect(ngrokConfig, function(err, url) {
         if (err) {
             console.log(err);
         } else {
-            console.log('Tunnel established. The ngrok url is ' + url);
+            green('Tunnel established. The ngrok url is ' + url);
 
-            waitUntilServersAreReady(
-                devInstanceAccessInfo.baseUrl,
-                url + '/atlassian-connect.json',
-                devInstanceAccessInfo.user,
-                devInstanceAccessInfo.password
-            );
+            if (config && config.user && config.password) {
+                waitUntilServersAreReady(
+                    config.baseUrl,
+                    url + '/atlassian-connect.json',
+                    config.user,
+                    config.password
+                );
+            } else {
+                green('Skipping installation of app descriptor from %s on %s. user and password are missing', url, config.baseUrl);
+            }
 
             callback(url);
         }

@@ -1,6 +1,6 @@
 # About Webpack Build
 
-The project provides a general base configuration for using webpack, register the atlassian-connect in combination with ngrok and additional helper functions.
+The project provides a general base configuration for using webpack to build and serve an app UI for Atlassian Connect, e.g. register the atlassian-connect.json in combination with ngrok and additional helper functions.
 
 
 ## Installing
@@ -24,7 +24,7 @@ var build = require('k15t-webpack-build/webpack-build.js');
     // setup weback as usual for your project 
     module.exports = master({
         metadata: {
-            title = 'Project title'
+            title: 'Project title'
         },
         entry: {
             'main': './src/main.ts'
@@ -51,9 +51,11 @@ The prod build includes also a license check which gather all used third-party l
 output directory. To setup a different output directory you can override metadata.outputlicenseSummaryFile or to define
 the licenses which must not be used e.g. GPL you can override metadata.notAllowedLicenses = ['GPL'] 
 
-## Atlassian connect add-on 
-In case you developing an Atlassian connect add-on the file addon-descriptor.js help you to open a HTTPS tunnel and register the
-add-on descriptor(atlassian-connect.json) on your dev instance when starting the webpack dev server:
+## Atlassian Connect app 
+In case you're developing an Atlassian Connect app the file addon-descriptor.js helps you to open a HTTPS tunnel and register the
+app descriptor (atlassian-connect.json) on your dev instance when starting the webpack dev server. The following code will establish an 
+ngrok tunnel that exposes the local port 3000 on your localhost. That ngrok URL is then used to set the descriptor URL in the 
+atlassian-connect.json and then the descriptor is installed to the configured Atlassian Cloud instance :
  
 ```javascript
 var webpack = require("webpack");
@@ -110,22 +112,38 @@ function startServer() {
                 });
             }
         });
-    }, {
-        "baseUrl": devInstanceAccessInfo.baseUrl,
-        "user": devInstanceAccessInfo.user,
-        "password": devInstanceAccessInfo.password
-    });
+    }, devInstanceAccessInfo);
 }
 
 startServer();
 
 ```
 
-For the installation of the add-on descriptor the webpack dev sever must server the descriptor under https://host:port/atlassian-connect.json.
+To configure the `devInstanceAccessInfo` you can use a json file (as above) or use a JS config object directly.
+The following configuration values are usable:
+
+```json
+{
+    "baseUrl": "https://myplugin-dev.atlassian.net/wiki",
+    "user": "Atlassian-ID-email",
+    "password": "secret",
+    "ngrok": {
+      "region" : "eu",
+      "subdomain": "myplugin"
+    }
+}
+
+```
+where
+- baseUrl identifies the Atlassian cloud instance
+- user and password are the (Atlassian ID) user and password used to install the app descriptor, i.e. they need sufficient permissions in the Atlassian cloud instance. Only if user and password are given will the installation be attempted.
+- ngrok can contain any sensible ngrok configuration passed on to the creation of the ngrok tunnel, see https://www.npmjs.com/package/ngrok#options.  
+
+ 
  
 ## Example scripts which can be added directly to the package.json
 
-```javascript
+```npm
 "clean:all": "rimraf node_modules target && npm cache clean",
 "prepublish": "typings install",
 "build": "npm run build:dev",
